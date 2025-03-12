@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alquran/screens/list_quran.dart';
+import 'package:flutter_alquran/screens/profile.dart';
 
 import 'package:flutter_alquran/screens/splash_screen.dart';
 import 'screens/main_screen.dart';
@@ -15,13 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-initialRoute: '/',
+      initialRoute: '/',
       routes: {
-        '/' :(context)=> SplashScreen(),
-        '/main' :(context)=> MainScreen(),
-        '/listquran':(context)=> SurahListScreen() ,
-      } ,
+        '/': (context) => SplashScreen(),
+        '/main': (context) => MainScreen(),
+        '/listquran': (context) => SurahListScreen(),
+        '/profile': (context) => ProfilePage(),
+      },
     );
-     
   }
 }
