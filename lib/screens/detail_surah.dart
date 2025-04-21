@@ -88,10 +88,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                   color: MyColors.primary,
                 ),
               );
-              // Text(
-              //   surah['arti'],
-              //   style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-              // ),
             }
           },
         ),
@@ -118,7 +114,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
             final surah = snapshot.data!;
             return ListView.builder(
               padding: EdgeInsets.all(16),
-
+              itemCount: surah.ayat.length,
               itemBuilder: (context, index) {
                 final ayat = surah.ayat[index];
                 return Column(
