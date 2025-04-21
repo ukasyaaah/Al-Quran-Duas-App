@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      Duration(seconds: 3),
+      Duration(seconds: 2),
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) => MainScreen()),
       ),
@@ -27,6 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: MyColors.primary,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 95, right: 26, left: 26),
@@ -35,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 411,
                 decoration: BoxDecoration(
                   color: MyColors.secondary,
-
+        
                   borderRadius: BorderRadius.circular(18),
                   image: DecorationImage(
                     fit: BoxFit.contain,
@@ -58,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: 16),
             Text(
               'Your Daily Quran and\nDuas Recite',
-
+        
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 color: MyColors.text,

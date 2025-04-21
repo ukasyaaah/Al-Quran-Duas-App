@@ -32,30 +32,53 @@ class ProfilePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: AssetImage(
-                            'assets/images/profile.jpg',
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage(
+                              'assets/images/profile.jpg',
+                            ),
                           ),
-                        ),
-                        title: Text('ukasyaaah'),
-                        titleTextStyle: GoogleFonts.poppins(
-                          color: MyColors.text,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        subtitle: Text('Hey'),
+                          SizedBox(width: 15),
+                          SizedBox(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Ukhasyah Fauzan',
+                                  textAlign: TextAlign.left,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Software Engineer',
+                                  textAlign: TextAlign.left,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 24),
                       Text(
+                        'Hai! Aku Ukhasyah, pengembang aplikasi ini. Desain aplikasi ini terinspirasi dari karya keren milik Syeda Urooj Sohail. \nSemoga aplikasinya bermanfaat dan nyaman dipakai, ya!',
                         textAlign: TextAlign.start,
-                        'Aplikasi ini dirancang untuk memudahkan kamu dalam membaca, memahami, dan menghafal Al-Qur\’an serta doa-doa harian.\n\n Dilengkapi dengan teks Al-Qur’an lengkap, terjemahan, serta kumpulan doa - doa, aplikasi ini menjadi teman ibadah yang praktis. Semoga bermanfaat dan membawa berkah',
-                        style: GoogleFonts.poppins(fontSize: 20),
+                        style: GoogleFonts.inter(
+                          fontSize: 20,
+                          height: 2,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ],
                   ),

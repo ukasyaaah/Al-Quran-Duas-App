@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_alquran/widgets/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import '../models/surah.dart';
 
 class SurahDetailScreen extends StatefulWidget {
   final int id;
@@ -13,15 +14,16 @@ class SurahDetailScreen extends StatefulWidget {
 }
 
 class _SurahDetailScreenState extends State<SurahDetailScreen> {
-  late Future<Map<String, dynamic>> surahDetail;
+  late Future<Surah> surahDetail;
 
-  Future<Map<String, dynamic>> fetchSurahDetail() async {
+  Future<Surah> detailSurah() async {
     final response = await http.get(
-      Uri.parse('https://quran-api.santrikoding.com/api/surah/${widget.id}'),
+      Uri.parse('https://equran.id/api/v2/surat/${widget.id}'),
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      var data = jsonDecode(response.body)['data'];
+      return Surah.fromJson(data);
     } else {
       throw Exception('Gagal mengambil data surah');
     }
@@ -30,7 +32,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   @override
   void initState() {
     super.initState();
-    surahDetail = fetchSurahDetail();
+    surahDetail = detailSurah();
   }
 
   @override
@@ -38,26 +40,25 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     return Scaffold(
       backgroundColor: MyColors.primary,
       appBar: AppBar(
+        toolbarHeight: 60,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back, color: MyColors.primary),
         ),
-        title: Text('Detail Surah'),
-        titleTextStyle: GoogleFonts.poppins(
-          color: MyColors.primary,
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-        ),
         backgroundColor: Colors.transparent,
-        elevation: 0,
         centerTitle: true,
-
-        // toolbarHeight: 300,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+            // borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)
+            // ),
+            image: DecorationImage(
+              opacity: 0.5,
+              alignment: Alignment.bottomCenter,
+              fit: BoxFit.fitWidth,
+              image: AssetImage('assets/images/Vector1.png'),
+            ),
             gradient: LinearGradient(
               colors: [MyColors.secondary, MyColors.ternary],
               begin: Alignment.topLeft,
@@ -65,57 +66,87 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
             ),
           ),
         ),
+        title: FutureBuilder<Surah>(
+          future: surahDetail,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: MyColors.ternary,
+                  backgroundColor: MyColors.text,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Terjadi kesalahan!'));
+            } else {
+              final surah = snapshot.data!;
+              return Text(
+                surah.nama,
+                style: GoogleFonts.amiri(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: MyColors.primary,
+                ),
+              );
+              // Text(
+              //   surah['arti'],
+              //   style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+              // ),
+            }
+          },
+        ),
+
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Tab(child: Image.asset('assets/images/bismillah.png')),
+        ),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
+
+      body: FutureBuilder<Surah>(
         future: surahDetail,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: MyColors.ternary,
+                backgroundColor: MyColors.text,
+              ),
+            );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Terjadi kesalahan!'));
+            return Center(child: Text('Kamu butuh koneksi internet'));
           } else {
             final surah = snapshot.data!;
-            return ListView(
+            return ListView.builder(
               padding: EdgeInsets.all(16),
-              children: [
-                Text(
-                  '${surah['nama']}',
-                  style: GoogleFonts.amiri(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  surah['arti'],
-                  style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-                ),
-                SizedBox(height: 20),
-                ...surah['ayat'].map<Widget>((ayat) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${ayat['ar']}',
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.amiri(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: MyColors.text,
-                        ),
+
+              itemBuilder: (context, index) {
+                final ayat = surah.ayat[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 20),
+                    Text(
+                      ayat.teksArab,
+                      textAlign: TextAlign.right,
+                      style: GoogleFonts.amiri(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: MyColors.text,
+                        height: 3,
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        '${ayat['idn']}',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(fontSize: 16, color: MyColors.text),
-                      ),
-                      SizedBox(height: 25),
-                      Divider(color: MyColors.secondary),
-                      SizedBox(height: 15),
-                    ],
-                  );
-                }).toList(),
-              ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      ayat.teksIndonesia,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 16, color: MyColors.text),
+                    ),
+                    SizedBox(height: 25),
+                    Divider(color: MyColors.secondary),
+                    SizedBox(height: 15),
+                  ],
+                );
+              },
             );
           }
         },
